@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang=ja>
+<head>
+    <meta charset="utf-8">
+    <title>1回目</title>
+</head>
+<body>
+<h>今回の目標</h>
+<p>『このプログラムを理解できるようになろう！』</p>
+    <script>
+　　     // あなたのデータ初期化
+        var name  = "あなた"; // ※ あなたの名前に書き換えてね 
+        var age   = 29;      // ※ あなたの年齢に書き換えてね
+        var height = 174;    // ※ あなたの身長に書き換えてね
+ 
+        // ジェットコースター
+        minAge      = 14;
+        minheight   = 140;
+
+        // イベント
+        eventNum = 2;
+
+        // すくーにゃが乗れる乗り物を判定するよ！
+        console.log(name + "がジェットコースターに挑戦！！");
+        if (age >= minAge && height >= minheight) {
+            console.log(name + "はジェットコースターの規制を華麗にパス。颯爽と乗り込んだ!");
+        } else {
+            console.log(name + "はジェットコースターの規制にひっかかって乗れませんでした...無念");
+        }
+
+        // イベントだよ！
+        console.log("イベント実施中！ 年齢が" + eventNum + "の倍数ならプレゼントGET！");
+        console.log(name + "の年齢は" + age + "...");    
+        console.log(name + "の年齢は果たして" + eventNum + "の倍数なのか...");
+        if (age % eventNum === 0) {
+            console.log("見事、" + name + "の年齢は" + eventNum + "の倍数でした...!!!");
+        } else {
+            console.log("残念、" + name + "の年齢は" + eventNum + "の倍数ではありませんでした...!!!");
+        }
+    </script>
+</body>
+</html>
