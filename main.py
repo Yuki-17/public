@@ -1,18 +1,35 @@
 import requests
 import json
+import calendar
 
 
-#‹Æ–±ƒƒWƒbƒN
-#c#‚©‚çæ“¾‚µ‚½”’l‚ğ10”{•Ô‚µ
-def getdb():
-    url = '‚±‚±‚ÉC#‚ÌƒAƒhƒŒƒX‚ğ“ü‚ê‚é'
-    response = requests.get(url)
-    data = response.json()
-    calten = int(data["Data1"])*10
+#?Æ–????W?b?N
+#c#?????????????l??0?{?Ô‚?
+
+data = open('./sample.json',"r")
+data1 = json.load(data)
+data2 = len(data1["datalist"])
+datalist = []
+for i in range(data2):
+	datalist.append((data1["datalist"][i]["a"])[0:7])
+
+data3 = list(dict.fromkeys(datalist))
+
+data4 = {"rev_vol1":"","rev_vol2":"","rev_vol3":"","rev_vol4":""}
+
+data7 = {}
+for i in range(len(data3)):
+	data5 = {}
+	data6 = calendar.monthrange(int(data3[i][0:4]),int(data3[i][5:7]))[1]
+	for n in range(data6):
+		data5[n+1] = data4
+	data7[data3[i]] = data5
+
+
+print(data7)
    
-    return (calten)
 
-def gettest():
-    return 1
+
+
 
 
