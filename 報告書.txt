@@ -1,0 +1,213 @@
+7.wcf→restapiのポイント
+概要：
+現行TOPSではすべての資産が同一のサーバーにあるためサーバー間の
+通信はしていないが元々WCF(Windows Communication Foundation)は
+サーバー間での通信を実現するためフレームワークであるため
+RESTAPI化は現行で使用しているWCFのままでインターフェースの設定を
+変更するだけ実現できる。
+また資産の配置も現行で使用しているIISに新規にサイトを追加することで対応可能。
+
+
+
+実際の手順は以下
+1.端末の設定変更
+2.IISのサイトを新規作成する。
+3.インターフェイスの修正
+4.web.configの修正
+5.エンドポイントの設定
+6.IISに資産を発行する。
+7.
+
+
+配船計画のソースを例として手順の説明をする。
+
+
+1.端末の設定変更
+コントロールパネル→プログラムと機能→Windows の機能の有効化または無効化
+C:\Windows\System32\inetsrv\config
+<section name="modules" allowDefinition="MachineToApplication" overrideModeDefault="Deny" />
+https://urashita.com/archives/13055
+
+
+2.IISでサイトを新規作成する。
+
+
+
+
+1.インターフェイスの修正
+
+ImainService.cs
+一部抜粋
+修正前
+namespace main
+{
+    // メモ: [リファクター] メニューの [名前の変更] コマンドを使用すると、コードと config ファイルの両方で同時にインターフェイス名 "IService1" を変更できます。
+    [ServiceContract]
+    public interface IService1
+    {
+        [OperationContract]
+        CompositeType GetDataUsingDataContract(CompositeType composite);
+
+修正後
+       [OperationContract]
+        [WebGet(UriTemplate = "getdata/{b}",
+        ResponseFormat = WebMessageFormat.Json)]
+        CompositeType GetDataUsingDataContract(CompositeType composite);
+
+
+インターフェースの定義にWebGet属性を追加するとHTTPのGETのアクションを有効することができる。
+WebGetのプロパティとしてUriTemplateとResponceFormatを設定する。
+UriTemplateではHTTPリクエストで呼び出すURLを設定している。
+ResponceFormatでは呼び出し側に渡すデータの形式を設定しており今回はJsonとしている。
+
+2.web.configの修正
+※現行と新の対比を記載
+
+3.エンドポイントの設定
+
+Global.asax.cs
+           ServiceRoute sroute = new ServiceRoute("v1", new WebServiceHostFactory(), typeof(Service1));
+            RouteTable.Routes.Add(sroute);
+この設定をしない場合でもAPIとして実行は可能だが、URLをソース名で実行しなければならないため
+RESTの設計に応じた名称に変更する。
+変更前
+http://localhost/Mainservice.cs/
+変更後
+http://localhost/v1/
+
+
+6.IISに資産を発行する。
+
+
+
+
+
+・REST API対応後のソース管理について
+
+今回のPOCでは現行と次世代のロジックを同一のソース内に混在させる。
+新旧の切り替えはコメントアウトで対応する。
+
+
+
+
+
+
+
+
+
+
+
+
+8.環境構築方法
+3つのさーばの説明
+
+前提条件のツールがあれば
+現行TOPSはそのままでよい
+
+APIサーバ
+1.Djangoのプロジェクトを作成する。
+2.アプリケーションを作成する。
+参考サイト
+https://docs.djangoproject.com/ja/3.0/intro/tutorial01/
+
+1.Djangoのプロジェクトを作成する。
+下記コマンドを実行することでカレントディレクトリにDjangoのフォルダが作成される
+django-admin startproject [プロジェクト名]
+
+
+2.アプリケーションを作成する。
+1.で作成したmanage.pyと同じフォルダ内に移動して下記コマンドを実行する
+python manage.py startapp [アプリケーション名]
+
+アプリケーションは作成したいAPI単位に作成する。
+以上でAPIサーバの環境構築は完了。
+
+
+WEBサーバ
+araiフォルダの環境構築手順を転機
+
+
+
+9.各資産のリリース方法
+gitで管理するのはnodeとpyhtonのみ？
+
+git clone
+ファイルを修正する。
+git add .
+git commit -m
+git push
+
+
+
+
+
+
+
+現行TOPSではWCF(Windows Communication Foundation)でServer資産作成して
+IISに公開することでClient資産からの呼び出しを可能にしている。
+WCFとは.NET Frameworkの提供している機能で異なるサーバー間でのソフトウェアの
+通信を実現する機能である。以下参考サイト
+https://docs.microsoft.com/ja-jp/dotnet/framework/wcf/whats-wcf
+
+現行ではClientとServerの資産は同一のサーバーに存在するので
+Server資産のインスタンスを生成してメソッドを呼び出す形式を採用している。
+次世代システムではServer資産を呼び出す処理(Django)は別のサーバーに存在することと
+pythonで生成された処理であるため(現行はC#)APIをhttpリクエストの形で
+
+
+
+現行TOPSで
+今回のPOCではRESTAPIを使用することで
+
+インターフェースを修正することでAPIとして使用することが可能
+以下配船計画を例として実際のソースコードで手順を記載する。
+
+1.インターフェイス部分の修正
+2.WCFサービスの動作確認
+3.ルーティングの設定
+4.REST呼び出しでの動作確認
+1-4を実施することで
+httpsssss
+というAPIが完成する。
+
+
+
+・IMainService.cs
+このソースではClient資産からServer資産を呼び出すための定義が記載されている。
+
+
+
+
+一部抜粋
+修正前
+namespace main
+{
+    // メモ: [リファクター] メニューの [名前の変更] コマンドを使用すると、コードと config ファイルの両方で同時にインターフェイス名 "IService1" を変更できます。
+    [ServiceContract]
+    public interface IService1
+    {
+        [OperationContract]
+        CompositeType GetDataUsingDataContract(CompositeType composite);
+
+修正後
+       [OperationContract]
+        [WebGet(UriTemplate = "getdata/{b}",
+        ResponseFormat = WebMessageFormat.Json)]
+        CompositeType GetDataUsingDataContract(CompositeType composite);
+
+
+
+
+
+
+
+
+
+修正対象資産
+・インターフェース
+・メイン機能
+
+
+
+
+
