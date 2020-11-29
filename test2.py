@@ -8,8 +8,11 @@ flg = 0
 # ファイルオープン
 while flg == 0:
     row = -2
-    with open("/Users/minorijibiki/Desktop/sendpipe") as po:
-        pr = po.readlines()
+    try:
+        with open("/Users/minorijibiki/Desktop/sendpipe") as po:
+            pr = po.readlines()
+    except:
+        pass
     while True:
         try:
             if pr[row][0:4] == "1022":
