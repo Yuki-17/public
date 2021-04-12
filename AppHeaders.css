@@ -1,0 +1,41 @@
+.dataHeader1{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  width: 100px;  
+  height: 450px;
+  border: 1px solid gray;
+  text-align: center;
+}
+.dataHeader1 + .dataHeader1{
+  border-left: none;
+}
+.MuiStepConnector-line .MuiStepConnector-lineVertical{
+  border: 10px solid black;
+}
+
+
+.dataHeaderAll{
+  display: flex;
+  flex-direction: row;
+}
+
+.dataHeader2{
+  width: 100px;  
+  height: 150px; 
+  text-align: center; 
+  /*border: 1px solid red;*/
+}
+.dataHeader2 + .dataHeader2{
+  border-top: 1px solid gray;
+}
+
+/*background*/
+.dataHeader1:first-child{
+  background-color: #CCCCCC;
+  
+}
+.dataHeader2:nth-child(even){
+  background-color: #CCCCCC;
+  border-right: 1px solid gray;
+}

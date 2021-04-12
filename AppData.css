@@ -1,0 +1,20 @@
+.data div+ .dataDay div{
+  border-left: none;
+  border-bottom: none;
+}
+.data div:last-child{
+  border-bottom: 1px solid gray;;
+}
+
+/*background*/
+.dataDay:first-child{
+  background-color: #CCCCCC;
+}
+.data:nth-child(){
+  background-color: #ada6a6;
+
+}
+
+.databorder{
+  background-color: red;
+}
